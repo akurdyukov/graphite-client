@@ -143,18 +143,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduler.cs" />
-    <Compile Include="ServiceInstaller.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ServiceInstaller.designer.cs">
-      <DependentUpon>ServiceInstaller.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WindowsService.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="WindowsService.designer.cs">
-      <DependentUpon>WindowsService.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Graphite\graphite.snk">
@@ -171,14 +159,6 @@
       <Project>{E9ED1C85-2C0A-43A7-A98A-FC3EC92B6F8A}</Project>
       <Name>Graphite</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ServiceInstaller.resx">
-      <DependentUpon>ServiceInstaller.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WindowsService.resx">
-      <DependentUpon>WindowsService.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -73,7 +73,17 @@ namespace Graphite.System
                 this.scheduler.Add(() => element.LoadCounterName(), 90);
             }
 
+            //this.scheduler.Start();
+        }
+
+        public void Start()
+        {
             this.scheduler.Start();
+        }
+
+        public void Stop()
+        {
+            this.scheduler.Stop();
         }
 
         public void Dispose()

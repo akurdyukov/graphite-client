@@ -11,6 +11,7 @@ namespace Graphite.System
     internal class Kernel : IDisposable
     {
         private const short RetryInterval = 60;
+        private const string AllInstances = "*";
 
         private readonly Scheduler scheduler;
 
@@ -41,18 +42,42 @@ namespace Graphite.System
             {
                 Action action;
 
-                try
+                if (listener.Instance == AllInstances)
                 {
-                    action = this.CreateReportingAction(listener);
+                    var category = new PerformanceCounterCategory(listener.Category);
+                    var instances = category.GetInstanceNames();
+                    foreach (var instance in instances)
+                    {
+                        try
+                        {
+                            action = this.CreateReportingAction(listener, instance);
 
-                    this.scheduler.Add(action, listener.Interval);
+                            this.scheduler.Add(action, listener.Interval);
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            if (!listener.Retry)
+                                throw;
+
+                            this.retryCreation.Add(listener);
+                        }
+                    }
                 }
-                catch (InvalidOperationException)
+                else
                 {
-                    if (!listener.Retry)
-                        throw;
+                    try
+                    {
+                        action = this.CreateReportingAction(listener);
 
-                    this.retryCreation.Add(listener);
+                        this.scheduler.Add(action, listener.Interval);
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        if (!listener.Retry)
+                            throw;
+
+                        this.retryCreation.Add(listener);
+                    }
                 }
             }
 
@@ -122,7 +147,12 @@ namespace Graphite.System
 
         private Action CreateReportingAction(CounterListenerElement config)
         {
-            CounterListener listener = new CounterListener(config.Category, config.Instance, config.Counter);
+            return CreateReportingAction(config, config.Instance);
+        }
+
+        private Action CreateReportingAction(CounterListenerElement config, string instance)
+        {
+            CounterListener listener = new CounterListener(config.Category, instance, config.Counter);
             
             IMonitoringChannel channel;
 
@@ -143,9 +173,20 @@ namespace Graphite.System
 
                 if (value.HasValue)
                 {
-                    channel.Report(config.Key, (long)value.Value);
+                    channel.Report(config.Key.Replace("{instance}", SafeInstance(instance)), (long)value.Value);
                 }
             };
+        }
+
+        private string SafeInstance(string instance)
+        {
+            return instance
+                .Replace('.', '_')
+                .Replace(' ', '_')
+                .Replace('/', '_')
+                .Replace('\\', '_')
+                .Replace('|', '_')
+                .Replace(":", "");
         }
 
         private Action CreateReportingAction(AppPoolElement config, out AppPoolListener listener)

@@ -25,8 +25,9 @@ namespace Graphite.System
                     s.WhenStopped(k => k.Stop());
                     s.WhenPaused(k => k.Stop());
                     s.WhenContinued(k => k.Start());
-                });
-                x.RunAsLocalSystem();
+                })
+                .StartAutomatically()
+                .RunAsLocalSystem();
                 x.SetServiceName("FE-Metrics");
                 x.SetDisplayName("FlowEnergy Metrics Service");
                 x.SetDescription("Publishes metrics to statsd/graphite");

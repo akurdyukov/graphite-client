@@ -44,12 +44,17 @@ namespace MSBuild.Graphite.Tasks
                     "Reported value '{0}' of type '{1}' for key '{2}' to {3}:{4}.",
                     this.Value,
                     this.Type,
-                    string.IsNullOrEmpty(this.PrefixKey) ? this.Key : (this.PrefixKey + "." + this.Key),
+                    string.IsNullOrEmpty(this.PrefixKey) ? this.Key : (FormatPrefixKey(this.PrefixKey) + "." + this.Key),
                     this.Address,
                     this.Port);
             }
 
             return true;
+        }
+
+        private string FormatPrefixKey(string prefixKey)
+        {
+            return string.Format("{0}.{1}", prefixKey, Environment.MachineName);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 
 namespace Graphite
@@ -7,6 +8,8 @@ namespace Graphite
     internal static class Logging
     {
         private static readonly TraceSource source = new TraceSource("Graphite");
+        private static readonly string startLine = new string('=', 30);
+        private static readonly string secondLine = new string('-', 30);
 
         /// <summary>
         /// Graphite trace source.
@@ -23,9 +26,9 @@ namespace Graphite
 
             var buffer = new StringBuilder();
 
-            buffer.AppendLine(new string('=', 30));
-            buffer.AppendLine(DateTime.Now.ToString());
-            buffer.AppendLine(new string('-', 30));
+            buffer.AppendLine(startLine);
+            buffer.AppendLine(DateTime.Now.ToString(CultureInfo.InvariantCulture));
+            buffer.AppendLine(secondLine);
 
             Exception current = exception;
 
@@ -44,10 +47,11 @@ namespace Graphite
 
         private static void Format(Exception exception, StringBuilder buffer, int intend = 0)
         {
-            buffer.AppendLine(new string(' ', intend) + exception.Message);
+            var indent = new string(' ', intend);
+            buffer.Append(indent).AppendLine(exception.Message);
             buffer.AppendLine();
-            buffer.AppendLine(new string(' ', intend) + exception.StackTrace);
-            buffer.AppendLine(new string(' ', intend) + new string('-', 60 - intend));
+            buffer.Append(indent).AppendLine(exception.StackTrace);
+            buffer.Append(indent).AppendLine(60 - intend > 0 ? new string('-', 60 - intend) : string.Empty);
             buffer.AppendLine();
         }
     }

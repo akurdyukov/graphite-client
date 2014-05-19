@@ -16,6 +16,7 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
+*.sln.DotSettings
 *.vs10x
 StyleCop.Cache
 /tests/

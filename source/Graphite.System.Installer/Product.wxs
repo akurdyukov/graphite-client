@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Name="GraphiteSystemMonitor"
+           Id="*"
+           UpgradeCode="{09B789C3-9AED-4A1B-8ED4-805F6FB8312C}"
+           Manufacturer="Peter Schuster"
+           Version="!(bind.FileVersion.GraphiteSystemMonitor.exe)"
+           Language="1033">
+    <Package InstallerVersion="200"
+             Compressed="yes" />
+    <Media Id="1"
+           Cabinet="media1.cab"
+           EmbedCab="yes" />
+    
+    <Directory Id="TARGETDIR"
+               Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="APPLICATIONROOTDIRECTORY"
+                   Name="GraphiteSystemMonitor">
+          <Component Id="GraphiteSystemMonitor"
+                     Guid="{9EE3B61E-681A-4978-9011-FAAF9D996FE2}">
+            <File Source="$(var.Graphite.System.TargetDir)\GraphiteSystemMonitor.exe.config" Vital="yes" KeyPath="no" DiskId="1" />
+            <File Source="$(var.Graphite.System.TargetDir)\Graphite.dll" Vital="yes" KeyPath="no" DiskId="1" />
+            <File Source="$(var.Graphite.System.TargetDir)\Topshelf.dll" Vital="yes" KeyPath="no" DiskId="1" />
+            <File Id="GraphiteSystemMonitor.exe"
+                  Name="GraphiteSystemMonitor.exe"
+                  Source="$(var.Graphite.System.TargetDir)\GraphiteSystemMonitor.exe"
+                  Vital="yes"
+                  KeyPath="yes"
+                  DiskId="1" />
+          </Component>
+        </Directory>
+      </Directory>
+      </Directory>
+
+    <CustomAction Id="Install" Directory="APPLICATIONROOTDIRECTORY"
+                  Execute="deferred" Impersonate="no" Return="ignore"
+                  ExeCommand="[APPLICATIONROOTDIRECTORY]GraphiteSystemMonitor.exe install" />
+
+    <CustomAction Id="Stop" Directory="APPLICATIONROOTDIRECTORY"
+                  Execute="deferred" Impersonate="no" Return="ignore"
+                  ExeCommand="[APPLICATIONROOTDIRECTORY]GraphiteSystemMonitor.exe stop" />
+
+    <CustomAction Id="Uninstall" Directory="APPLICATIONROOTDIRECTORY"
+                  Execute="deferred" Impersonate="no" Return="ignore"
+                  ExeCommand="[APPLICATIONROOTDIRECTORY]GraphiteSystemMonitor.exe uninstall" />
+
+    <InstallExecuteSequence>
+
+      <Custom Action='Install' After='InstallFiles' >
+        NOT REMOVE
+      </Custom>
+
+      <Custom Action='Stop' After='InstallInitialize' >
+        Installed AND (REMOVE = "ALL")
+      </Custom>
+
+      <Custom Action='Uninstall' After='Stop' >
+        Installed AND (REMOVE = "ALL")
+      </Custom>
+
+    </InstallExecuteSequence>
+    
+    <Feature Id="ProductFeature"
+             Title="GraphiteSystemMonitor"
+             Level="1">
+      <ComponentRef Id="GraphiteSystemMonitor" />
+    </Feature>
+  </Product>
+</Wix>

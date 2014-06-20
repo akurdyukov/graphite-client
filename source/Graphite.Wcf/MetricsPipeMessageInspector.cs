@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Dispatcher;
+using Common.Logging;
 
 namespace Graphite.Wcf
 {
     public class MetricsPipeMessageInspector : IDispatchMessageInspector
     {
+        private static readonly ILog logger = LogManager.GetCurrentClassLogger();
         private readonly MetricSetting reportRequestTime;
 
         private readonly MetricSetting reportHitCount;
@@ -85,7 +86,7 @@ namespace Graphite.Wcf
             }
             catch (SystemException exception)
             {
-                Trace.TraceError(exception.Format());
+                logger.Warn("Got system exception", exception);
             }
 
             if (profiler != null)

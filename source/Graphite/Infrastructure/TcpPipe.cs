@@ -1,14 +1,16 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Common.Logging;
 
 namespace Graphite.Infrastructure
 {
     internal class TcpPipe : IPipe, IDisposable
     {
+        private static readonly ILog logger = LogManager.GetCurrentClassLogger();
+
         private readonly IPEndPoint endpoint;
 
         private TcpClient tcpClient;
@@ -103,11 +105,11 @@ namespace Graphite.Infrastructure
             }
             catch (IOException exception)
             {
-                Logging.Source.TraceEvent(TraceEventType.Error, 0, exception.Format());
+                logger.Error("IO Exception sending data", exception);
             }
             catch (ObjectDisposedException exception)
             {
-                Logging.Source.TraceEvent(TraceEventType.Error, 0, exception.Format());
+                logger.Error("Exception sending data", exception);
             }
 
             return false;

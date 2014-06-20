@@ -22,6 +22,10 @@
             <File Source="$(var.Graphite.System.TargetDir)\GraphiteSystemMonitor.exe.config" Vital="yes" KeyPath="no" DiskId="1" />
             <File Source="$(var.Graphite.System.TargetDir)\Graphite.dll" Vital="yes" KeyPath="no" DiskId="1" />
             <File Source="$(var.Graphite.System.TargetDir)\Topshelf.dll" Vital="yes" KeyPath="no" DiskId="1" />
+            <File Source="$(var.Graphite.System.TargetDir)\Common.Logging.dll" Vital="yes" KeyPath="no" DiskId="1" />
+            <File Source="$(var.Graphite.System.TargetDir)\Common.Logging.Core.dll" Vital="yes" KeyPath="no" DiskId="1" />
+            <File Source="$(var.Graphite.System.TargetDir)\Common.Logging.NLog20.dll" Vital="yes" KeyPath="no" DiskId="1" />
+            <File Source="$(var.Graphite.System.TargetDir)\NLog.dll" Vital="yes" KeyPath="no" DiskId="1" />
             <File Id="GraphiteSystemMonitor.exe"
                   Name="GraphiteSystemMonitor.exe"
                   Source="$(var.Graphite.System.TargetDir)\GraphiteSystemMonitor.exe"

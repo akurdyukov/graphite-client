@@ -1,13 +1,15 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Common.Logging;
 
 namespace Graphite.Infrastructure
 {
     internal class UdpPipe : IPipe, IDisposable
     {
+        private static readonly ILog logger = LogManager.GetCurrentClassLogger();
+
         private readonly UdpClient udpClient;
 
         private bool disposed;
@@ -47,7 +49,7 @@ namespace Graphite.Infrastructure
             }
             catch (SocketException exception)
             {
-                Logging.Source.TraceEvent(TraceEventType.Error, 0, exception.Format());
+                logger.Error("Exception sending data", exception);
             }
 
             return false;
